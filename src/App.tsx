@@ -1,44 +1,49 @@
-import { useState } from 'react'
-import logo from './logo.svg'
-import './App.css'
+import { Form, Input, Select, Button } from 'antd';
+import RenderForm from './easyForm';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [form] = Form.useForm();
+
+  const onFinish = (values: any) => {
+    console.log('Success:', values);
+  };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
-    </div>
+    <RenderForm
+      form={form}
+      onFinish={onFinish}
+      items={[
+        {
+          component: <Input />,
+          name: 'name',
+          label: '姓名'
+        },
+        {
+          component: <Select options={[{ value: 11, label: 11 }, { value: 9, label: 9 }]} />,
+          name: 'age',
+          label: '年龄'
+        },
+        {
+          component: <Input />,
+          name: 'test',
+          label: 'test',
+          dependencies: ['name'],
+          rules: [
+            ({ getFieldValue }) => ({
+              validator: (_, value) => {
+                if (!value || getFieldValue('name') === value) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(new Error('姓名不一致'));
+              }
+            })
+          ]
+        },
+        {
+          component: <Button htmlType='submit'>提交</Button>,
+        }
+      ]}
+    />
   )
 }
 
