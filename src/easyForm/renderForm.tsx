@@ -4,9 +4,9 @@ import { FormListProps } from 'antd/lib/form';
 import { FormListFieldData, FormListOperation } from 'antd/lib/form/FormList';
 
 
-type ObjComponetItem = FormItemProps & { component?: React.ReactElement | null, noWrapper?: boolean }
-type FuncComponentItem = FormItemProps & { component?: (props: FormInstance) => React.ReactElement }
-type ListComponentItem = FormItemProps & { component?: Array<ObjComponetItem | FuncComponentItem> }
+type ObjComponetItem = FormItemProps & { component: React.ReactElement | null, noWrapper?: boolean }
+type FuncComponentItem = FormItemProps & { component: (props: FormInstance) => React.ReactElement }
+type ListComponentItem = FormItemProps & { component: Array<ObjComponetItem | FuncComponentItem> }
 type EasyFormItem = ObjComponetItem | FuncComponentItem | ListComponentItem
 
 type EasyFormList = Omit<FormListProps, 'children'> & {
@@ -40,21 +40,19 @@ const renderNormalComponent = (props: ObjComponetItem) => {
  */
 const renderFuncComponent = (props: FuncComponentItem) => {
   const { component, dependencies, shouldUpdate, ...restItemProps } = props;
-  if (typeof component === 'function') {
-    return (
-      <Form.Item
-        noStyle
-        dependencies={dependencies}
-        shouldUpdate={shouldUpdate}
-      >
-        {(props) => (
-          <Form.Item {...restItemProps}>
-            {(component as Function)(props)}
-          </Form.Item>
-        )}
-      </Form.Item>
-    )
-  }
+  return (
+    <Form.Item
+      noStyle
+      dependencies={dependencies}
+      shouldUpdate={shouldUpdate}
+    >
+      {(props) => (
+        <Form.Item {...restItemProps}>
+          {component(props as FormInstance)}
+        </Form.Item>
+      )}
+    </Form.Item>
+  )
 }
 
 /**
