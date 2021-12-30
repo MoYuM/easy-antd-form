@@ -1,45 +1,22 @@
 import React from 'react';
-import { Form, FormItemProps, FormInstance, } from 'antd';
-import { FormListProps } from 'antd/lib/form';
-import { FormListFieldData, FormListOperation } from 'antd/lib/form/FormList';
+import { Form, FormInstance, } from 'antd';
+import { EasyFormItem, EasyFormItemWithDeps, EasyFormList, EasyFormProps, NormalElement } from './interface';
 
 
-type ObjComponetItem = FormItemProps & { component: React.ReactElement | null, noWrapper?: boolean }
-type FuncComponentItem = FormItemProps & { component: (props: FormInstance) => React.ReactElement }
-type ListComponentItem = FormItemProps & { component: Array<ObjComponetItem | FuncComponentItem> }
-type EasyFormItem = ObjComponetItem | FuncComponentItem | ListComponentItem
+const renderItem = (item: EasyFormItem) => {
+  const { children, props } = item;
 
-type EasyFormList = Omit<FormListProps, 'children'> & {
-  list: (fields: FormListFieldData[], operation: FormListOperation, meta: {
-    errors: React.ReactNode[];
-    warnings: React.ReactNode[];
-  }) => Array<EasyFormItem>,
-}
-
-interface EasyFormProps extends React.ComponentProps<typeof Form> {
-  items: Array<EasyFormItem | EasyFormList>
-}
-
-/**
- * 如果component为一个对象
- */
-const renderNormalComponent = (props: ObjComponetItem) => {
-  const { component, noWrapper, ...restProps } = props;
-  if (noWrapper) {
-    return component
-  }
   return (
-    <Form.Item {...restProps}>
-      {component}
+    <Form.Item {...props}>
+      {renderChildren(children)}
     </Form.Item>
   )
 }
 
-/**
- * 如果component为一个函数
- */
-const renderFuncComponent = (props: FuncComponentItem) => {
-  const { component, dependencies, shouldUpdate, ...restItemProps } = props;
+const renderItemWithDeps = (item: EasyFormItemWithDeps) => {
+  const { children, props } = item;
+  const { dependencies, shouldUpdate, ...restProps } = props;
+
   return (
     <Form.Item
       noStyle
@@ -47,62 +24,54 @@ const renderFuncComponent = (props: FuncComponentItem) => {
       shouldUpdate={shouldUpdate}
     >
       {(props) => (
-        <Form.Item {...restItemProps}>
-          {component(props as FormInstance)}
+        <Form.Item {...restProps}>
+          {renderChildren(children(props as FormInstance))}
         </Form.Item>
       )}
     </Form.Item>
   )
 }
 
-/**
- * 如果component为list
- */
-const renderListComponent = (props: ListComponentItem) => {
-  const { component, ...restProps } = props;
-  return (
-    <Form.Item {...restProps}>
-      {
-        component?.map(item => {
-          if (typeof item.component === 'function') {
-            return renderFuncComponent(item as FuncComponentItem);
-          } else {
-            return renderNormalComponent(item as ObjComponetItem);
-          }
-        })
-      }
-    </Form.Item>
-  )
-}
 
-/**
- * 渲染Form.Item
- */
-const renderObjItem = (item: EasyFormItem) => {
-  const { component } = item;
-  if (typeof component === 'function') {
-    return renderFuncComponent(item as FuncComponentItem);
-  }
-  if (Array.isArray(component)) {
-    return renderListComponent(item as ListComponentItem);
-  }
-  return renderNormalComponent(item as ObjComponetItem);
-}
-
-/**
- * 如果item.type == 'list'，则渲染成Form.List
- */
-const renderListItem = (item: EasyFormList) => {
-  const { list, ...restProps } = item;
+const renderList = (item: EasyFormList) => {
+  const { children, props } = item;
   return (
-    <Form.List {...restProps}>
+    <Form.List {...props}>
       {(...arg) => {
-        const itemList = list(...arg);
-        return itemList.map(renderObjItem);
+        const itemList = children(...arg);
+        return renderChildren(itemList);
       }}
     </Form.List>
   )
 }
+
+const renderElement = (item: NormalElement) => {
+  const { element } = item;
+  return element;
+}
+
+const renderFuncMap = {
+  'item': renderItem,
+  'itemWithDeps': renderItemWithDeps,
+  'list': renderList,
+  'reactElement': renderElement,
+}
+
+const renderChildren = (children: Array<EasyFormItem | EasyFormList | NormalElement | EasyFormItemWithDeps>) => {
+
+  const list = children.map(item => {
+    const renderFunc = renderFuncMap[item.type];
+    // @ts-expect-error
+    return renderFunc?.(item);
+  })
+
+  if (list.length === 1) {
+    return list[0]
+  }
+
+  return list;
+}
+
 
 const RenderForm: React.FC<EasyFormProps> = (props) => {
 
@@ -110,15 +79,7 @@ const RenderForm: React.FC<EasyFormProps> = (props) => {
 
   return (
     <Form {...restFormProps}>
-      {
-        items.map(item => {
-          if ('list' in item) {
-            return renderListItem(item);
-          } else {
-            return renderObjItem(item);
-          }
-        })
-      }
+      {renderChildren(items)}
     </Form>
   )
 }

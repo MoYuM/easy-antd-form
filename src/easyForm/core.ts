@@ -1,3 +1,4 @@
+import { ItemType } from './interface';
 
 type Plugin = {
   name: string,
@@ -23,6 +24,11 @@ class Core {
     this.plugins = this.plugins.filter(i => i.name !== pluginName);
   }
 
+  add(type: ItemType) {
+
+  }
+
 }
+
 
 export default Core
