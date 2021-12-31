@@ -1,8 +1,8 @@
 import { Form, Input, Select, Button } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import RenderForm from './easyForm';
-import { EasyFormProps, EasyFormItem } from './easyForm/interface';
-import TestRender from 'react-test-renderer';
+import { EasyFormProps, EasyFormItem, Plugin } from './easyForm/interface';
+import Parser from './easyForm/parser';
 
 const formItemLayout = {
   labelCol: {
@@ -21,69 +21,78 @@ const formItemLayoutWithOutLabel = {
   },
 };
 
+const schema = [
+  {
+    name: 'name',
+    label: '姓名',
+    component: 'input',
+  },
+  {
+    name: 'age',
+    label: '年龄',
+    component: 'select',
+    options: [{ value: 1, label: 1 }, { value: 20, label: 20 }],
+  },
+  {
+    name: 'test',
+    label: '测试',
+    dependencies: ['age'],
+    component: 'input',
+  }
+]
+
+const Map = {
+  'input': <Input />,
+  'select': <Select />,
+}
+
+const tranformChildren: Plugin = (values, { setChildren }) => {
+  if (!values.children) {
+    setChildren([
+      {
+        type: 'reactElement',
+        element: Map[values.component],
+      }
+    ])
+  }
+}
+
+const getType = (values, { setType }) => {
+  if (!values.dependencies) {
+    setType('item')
+  }
+}
+
+const setOptions = (values, { setChildren }) => {
+  const Component = Map[values.component];
+  if (values.options) {
+    setChildren([
+      {
+        type: 'reactElement',
+        element: <Component options={values.options} />
+      }
+    ])
+  }
+}
+
+const parser = new Parser(schema);
+
+parser
+  .use(tranformChildren)
+  .use(getType)
+  .use(setOptions)
+
+parser.parse();
+const res = parser.getObj();
+console.log('%cres', 'background-color: darkorange', res);
+
 function App() {
   const [form] = Form.useForm();
-
-  const schema: EasyFormProps['items'] = [
-    {
-      type: 'list',
-      props: {
-        name: 'list',
-      },
-      children: (fields, { add, remove }, { errors }) => {
-        const fieldList: EasyFormItem[] = fields.map((i, index) => ({
-          type: 'item',
-          props: {
-            ...i,
-            ...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel),
-            label: index === 0 ? 'Passengers' : '',
-          },
-          children: [
-            {
-              type: 'item',
-              props: {
-                noStyle: true,
-              },
-              children: [
-                {
-                  type: 'reactElement',
-                  element: <Input style={{ width: '60%' }} />,
-                },
-                {
-                  type: 'reactElement',
-                  element: <Button onClick={() => remove(i.name)}>remove</Button>
-                }
-              ]
-            }
-          ]
-        }))
-
-        return [
-          ...fieldList,
-          {
-            type: 'item',
-            props: {},
-            children: [
-              {
-                type: 'reactElement',
-                element: <Button onClick={() => add()}>add</Button>
-              }
-            ]
-          }
-        ]
-      }
-    }
-  ]
-
-  const onFinish = (values: any) => {
-    console.log('Success:', values);
-  };
-
   return (
     <>
       <RenderForm
         {...formItemLayoutWithOutLabel}
-        items={schema}
+        items={res}
       />
     </>
   )

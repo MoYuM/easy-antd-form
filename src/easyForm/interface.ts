@@ -2,7 +2,7 @@ import { FormItemProps, FormInstance, FormProps } from 'antd';
 import { FormListProps } from 'antd/lib/form';
 import { FormListFieldData, FormListOperation } from 'antd/lib/form/FormList';
 
-export type ItemType = 'item' | 'itemWithDeps' | 'list' | 'reactElement'
+export type ItemType = 'item' | 'depsItem' | 'list' | 'reactElement'
 
 export interface EasyFormProps extends FormProps {
   items: Array<AllTypeItem>
@@ -14,8 +14,8 @@ export type EasyFormItem = {
   children: Array<AllTypeItem>
 }
 
-export type EasyFormItemWithDeps = {
-  type: 'itemWithDeps',
+export type EasyFormDepsItem = {
+  type: 'depsItem',
   props: FormItemProps,
   children: (props: FormInstance) => Array<AllTypeItem>
 }
@@ -29,9 +29,18 @@ export type EasyFormList = {
   }) => Array<AllTypeItem>
 }
 
-export type AllTypeItem = EasyFormItem | EasyFormList | NormalElement | EasyFormItemWithDeps
+export type AllTypeItem = EasyFormItem | EasyFormList | NormalElement | EasyFormDepsItem
 
 export type NormalElement = {
   type: 'reactElement',
   element: React.ReactElement,
 }
+
+type ItemMap = {
+  'item': EasyFormItem,
+  'depsItem': EasyFormDepsItem,
+  'list': EasyFormList,
+  'reactElement': NormalElement
+}
+
+export type Plugin = (value: Array<any>, tools: any) => void

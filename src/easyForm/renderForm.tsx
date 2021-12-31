@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, FormInstance, } from 'antd';
-import { EasyFormItem, EasyFormItemWithDeps, EasyFormList, EasyFormProps, NormalElement } from './interface';
+import { EasyFormItem, EasyFormDepsItem, EasyFormList, EasyFormProps, NormalElement } from './interface';
 
 
 const renderItem = (item: EasyFormItem) => {
@@ -13,7 +13,7 @@ const renderItem = (item: EasyFormItem) => {
   )
 }
 
-const renderItemWithDeps = (item: EasyFormItemWithDeps) => {
+const renderdepsItem = (item: EasyFormDepsItem) => {
   const { children, props } = item;
   const { dependencies, shouldUpdate, ...restProps } = props;
 
@@ -52,12 +52,12 @@ const renderElement = (item: NormalElement) => {
 
 const renderFuncMap = {
   'item': renderItem,
-  'itemWithDeps': renderItemWithDeps,
+  'depsItem': renderdepsItem,
   'list': renderList,
   'reactElement': renderElement,
 }
 
-const renderChildren = (children: Array<EasyFormItem | EasyFormList | NormalElement | EasyFormItemWithDeps>) => {
+const renderChildren = (children: Array<EasyFormItem | EasyFormList | NormalElement | EasyFormDepsItem>) => {
 
   const list = children.map(item => {
     const renderFunc = renderFuncMap[item.type];
