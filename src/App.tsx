@@ -23,21 +23,27 @@ const formItemLayoutWithOutLabel = {
 
 const schema = [
   {
-    name: 'name',
-    label: '姓名',
-    component: 'input',
+    type: 'item',
+    component: <Input />,
   },
   {
-    name: 'age',
-    label: '年龄',
-    component: 'select',
-    options: [{ value: 1, label: 1 }, { value: 20, label: 20 }],
+    type: 'item',
+    children: [
+      {
+        type: 'item',
+
+      }
+    ]
   },
   {
-    name: 'test',
-    label: '测试',
-    dependencies: ['age'],
-    component: 'input',
+    type: 'item',
+    component: <Input />,
+  },
+  {
+    type: 'list',
+    children: [
+
+    ]
   }
 ]
 

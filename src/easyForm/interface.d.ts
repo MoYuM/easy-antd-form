@@ -44,3 +44,20 @@ type ItemMap = {
 }
 
 export type Plugin = (value: Array<any>, tools: any) => void
+
+export type BaseSchema = FormProps & {
+  type: 'form',
+  items: BaseItem,
+}
+
+export type BaseItem = BaseFormItem | BaseFormList
+
+export type BaseFormItem = FormItemProps & {
+  type: 'item',
+  children: BaseItem[],
+}
+
+export type BaseFormList = FormListProps & {
+  type: 'list',
+  children: BaseItem[],
+}
