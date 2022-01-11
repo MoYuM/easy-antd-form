@@ -1,8 +1,9 @@
-import { Form, Input, Select, Button } from 'antd';
+import { Form, Input, Select, Button, FormInstance, Space } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import RenderForm from './easyForm';
-import { EasyFormProps, EasyFormItem, Plugin } from './easyForm/interface';
+import { EasyFormProps, EasyFormItem, Plugin, BaseSchema } from './easyForm/interface';
 import Parser from './easyForm/parser';
+import React from 'react';
 
 const formItemLayout = {
   labelCol: {
@@ -21,85 +22,204 @@ const formItemLayoutWithOutLabel = {
   },
 };
 
-const schema = [
-  {
-    type: 'item',
-    component: <Input />,
-  },
-  {
-    type: 'item',
-    children: [
-      {
-        type: 'item',
-
+const schema: BaseSchema = {
+  name: 'form',
+  items: [
+    // 普通item
+    {
+      component: 'input',
+      name: 'name',
+      label: '姓名',
+      props: {
+        placeholder: '请输入姓名',
       }
-    ]
-  },
-  {
-    type: 'item',
-    component: <Input />,
-  },
-  {
-    type: 'list',
-    children: [
+    },
 
-    ]
-  }
-]
+    // 稍复杂的item
+    {
+      type: 'formItem',
+      label: '年龄',
+      children: [
+        {
+          component: 'input',
+          name: 'age',
+          noStyle: true,
+        },
+        {
+          type: 'reactElement',
+          component: <a>need help?</a>
+        }
+      ]
+    },
 
-const Map = {
-  'input': <Input />,
-  'select': <Select />,
-}
-
-const tranformChildren: Plugin = (values, { setChildren }) => {
-  if (!values.children) {
-    setChildren([
-      {
-        type: 'reactElement',
-        element: Map[values.component],
+    // 有依赖的item
+    {
+      name: 'deps',
+      label: '依赖',
+      dependencies: ['age'],
+      component: 'input',
+      props: {
+        disabled: ({ getFieldValue }: FormInstance) => getFieldValue('age') === 10
       }
-    ])
-  }
+    },
+
+    // form list
+    {
+      name: 'list',
+      list: [
+        {
+          name: 'first',
+          component: 'input',
+        },
+        {
+          name: 'last',
+          component: 'input',
+        },
+      ]
+    }
+  ]
 }
 
-const getType = (values, { setType }) => {
-  if (!values.dependencies) {
-    setType('item')
-  }
+const ast = {
+  type: 'form',
+  props: [
+    { type: 'formProps', name: 'name', value: 'easy-antd-form' },
+  ],
+  children: [
+    // 普通item
+    {
+      type: 'formItem',
+      props: [
+        { type: 'formItemProps', name: 'name', value: 'name' },
+        { type: 'formItemProps', name: 'label', value: '姓名' },
+      ],
+      children: [
+        {
+          type: 'reactElement',
+          props: [
+            { type: 'reactElementProps', name: 'placeholder', value: '请输入姓名' },
+          ],
+          component: Input,
+        }
+      ],
+    },
+
+    // 稍复杂的item
+    {
+      type: 'formItem',
+      props: [
+        { type: 'formItemProps', name: 'label', value: '年龄' }
+      ],
+      children: [
+        {
+          type: 'formItem',
+          props: [
+            { type: 'formItemProps', name: 'name', value: 'age' },
+            { type: 'formItemProps', name: 'noStyle', value: true },
+          ],
+          children: [
+            {
+              type: 'reactElement',
+              props: [
+                { type: 'reactElementProps', name: 'placeholder', value: '请输入年龄' }
+              ],
+              component: Input,
+            }
+          ]
+        },
+        {
+          type: 'reactElement',
+          component: <a>need help?</a>
+        }
+      ]
+    },
+
+    // 有依赖的
+    {
+      type: 'formItemWrapper',
+      props: [
+        { type: 'formItemProps', name: 'dependencies', value: ['age'] },
+        { type: 'formItemProps', name: 'noStyle', value: true },
+      ],
+      children: [
+        {
+          type: 'formItem',
+          props: [
+            { type: 'formItemProps', name: 'name', value: 'deps' },
+            { type: 'formItemProps', name: 'label', value: '依赖' },
+          ],
+          children: [
+            {
+              type: 'reactElement',
+              component: Input,
+              props: [
+                {
+                  type: 'propsWithFunction',
+                  name: 'disabled',
+                  function: ({ getFieldValue }: FormInstance) => getFieldValue('age') === 10
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+
+    // list
+    {
+      type: 'formList',
+      props: [
+        { type: 'formListProps', name: 'name', value: 'list' },
+      ],
+      children: [
+        {
+          type: 'formListField',
+          children: [
+            {
+              type: 'formItemInList',
+              props: [
+                { type: 'formItemProps', name: 'name', value: 'first' },
+              ],
+              children: [
+                {
+                  type: 'reactElement',
+                  component: Input,
+                }
+              ]
+            },
+            {
+              type: 'formItemInList',
+              props: [
+                { type: 'formItemProps', name: 'name', value: 'last' },
+              ],
+              children: [
+                {
+                  type: 'reactElement',
+                  component: Input,
+                }
+              ]
+            }
+          ],
+        },
+        {
+          type: 'formItemInList',
+          children: [
+            {
+              type: 'formListRemoveItemBtn',
+              component: <a>remove</a>,
+            }
+          ]
+        }
+      ],
+    }
+  ]
 }
-
-const setOptions = (values, { setChildren }) => {
-  const Component = Map[values.component];
-  if (values.options) {
-    setChildren([
-      {
-        type: 'reactElement',
-        element: <Component options={values.options} />
-      }
-    ])
-  }
-}
-
-const parser = new Parser(schema);
-
-parser
-  .use(tranformChildren)
-  .use(getType)
-  .use(setOptions)
-
-parser.parse();
-const res = parser.getObj();
-console.log('%cres', 'background-color: darkorange', res);
 
 function App() {
   const [form] = Form.useForm();
   return (
     <>
-      <RenderForm
-        {...formItemLayoutWithOutLabel}
-        items={res}
-      />
+      <RenderForm />
     </>
   )
 }

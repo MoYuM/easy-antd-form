@@ -46,18 +46,25 @@ type ItemMap = {
 export type Plugin = (value: Array<any>, tools: any) => void
 
 export type BaseSchema = FormProps & {
-  type: 'form',
-  items: BaseItem,
+  type?: 'form',
+  items: Array<BaseItem>,
 }
 
-export type BaseItem = BaseFormItem | BaseFormList
+export type BaseItem = BaseFormItem | BaseFormList | BaseElement
 
 export type BaseFormItem = FormItemProps & {
-  type: 'item',
-  children: BaseItem[],
+  type?: 'formItem',
+  children?: BaseItem[],
+  component?: string, // TODO 用map
+  props?: any, // TODO 尽量别用any
+}
+
+export type BaseElement = {
+  type: 'reactElement',
+  component: React.ReactElement,
 }
 
 export type BaseFormList = FormListProps & {
-  type: 'list',
-  children: BaseItem[],
+  type?: 'fromList',
+  list: BaseItem[],
 }
