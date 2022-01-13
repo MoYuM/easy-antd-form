@@ -1,85 +1,30 @@
 import React from 'react';
 import { Form, FormInstance, } from 'antd';
-import { EasyFormItem, EasyFormDepsItem, EasyFormList, EasyFormProps, NormalElement } from './interface';
+import { EasyFormProps } from './interface';
+import parser from './parser';
+import transformer from './transformer';
 
 
-const renderItem = (item: EasyFormItem) => {
-  const { children, props } = item;
-
-  return (
-    <Form.Item {...props}>
-      {renderChildren(children)}
-    </Form.Item>
-  )
-}
-
-const renderdepsItem = (item: EasyFormDepsItem) => {
-  const { children, props } = item;
-  const { dependencies, shouldUpdate, ...restProps } = props;
-
-  return (
-    <Form.Item
-      noStyle
-      dependencies={dependencies}
-      shouldUpdate={shouldUpdate}
-    >
-      {(props) => (
-        <Form.Item {...restProps}>
-          {renderChildren(children(props as FormInstance))}
-        </Form.Item>
-      )}
-    </Form.Item>
-  )
-}
-
-
-const renderList = (item: EasyFormList) => {
-  const { children, props } = item;
-  return (
-    <Form.List {...props}>
-      {(...arg) => {
-        const itemList = children(...arg);
-        return renderChildren(itemList);
-      }}
-    </Form.List>
-  )
-}
-
-const renderElement = (item: NormalElement) => {
-  const { element } = item;
-  return element;
-}
-
-const renderFuncMap = {
-  'item': renderItem,
-  'depsItem': renderdepsItem,
-  'list': renderList,
-  'reactElement': renderElement,
-}
-
-const renderChildren = (children: Array<EasyFormItem | EasyFormList | NormalElement | EasyFormDepsItem>) => {
-
-  const list = children.map(item => {
-    const renderFunc = renderFuncMap[item.type];
-    // @ts-expect-error
-    return renderFunc?.(item);
-  })
-
-  if (list.length === 1) {
-    return list[0]
-  }
-
-  return list;
-}
 
 
 const RenderForm: React.FC<EasyFormProps> = (props) => {
 
-  const { items, ...restFormProps } = props;
+  const { schema, plugins } = props;
+
+  const getAST = () => {
+    const ast = parser(schema);
+    if (Array.isArray(plugins) && plugins.length > 0) {
+      return transformer(ast, plugins);
+    } else {
+      return ast;
+    }
+  }
+
+  const ast = getAST();
+  console.log('%cast', 'background-color: darkorange', ast);
 
   return (
-    <Form {...restFormProps}>
-      {renderChildren(items)}
+    <Form>
     </Form>
   )
 }

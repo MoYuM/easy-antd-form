@@ -4,6 +4,7 @@ import RenderForm from './easyForm';
 import { EasyFormProps, EasyFormItem, Plugin, BaseSchema } from './easyForm/interface';
 import Parser from './easyForm/parser';
 import React from 'react';
+import parser from './easyForm/parser';
 
 const formItemLayout = {
   labelCol: {
@@ -51,6 +52,34 @@ const schema: BaseSchema = {
         }
       ]
     },
+    // {
+    //   type: 'formItem',
+    //   props: [
+    //     { type: 'formItemProps', name: 'label', value: '年龄' }
+    //   ],
+    //   children: [
+    //     {
+    //       type: 'formItem',
+    //       props: [
+    //         { type: 'formItemProps', name: 'name', value: 'age' },
+    //         { type: 'formItemProps', name: 'noStyle', value: true },
+    //       ],
+    //       children: [
+    //         {
+    //           type: 'reactElement',
+    //           props: [
+    //             { type: 'reactElementProps', name: 'placeholder', value: '请输入年龄' }
+    //           ],
+    //           component: Input,
+    //         }
+    //       ]
+    //     },
+    //     {
+    //       type: 'reactElement',
+    //       component: <a>need help?</a>
+    //     }
+    //   ]
+    // },
 
     // 有依赖的item
     {
@@ -176,7 +205,7 @@ const ast = {
           type: 'formListField',
           children: [
             {
-              type: 'formItemInList',
+              type: 'formItem',
               props: [
                 { type: 'formItemProps', name: 'name', value: 'first' },
               ],
@@ -188,7 +217,7 @@ const ast = {
               ]
             },
             {
-              type: 'formItemInList',
+              type: 'formItem',
               props: [
                 { type: 'formItemProps', name: 'name', value: 'last' },
               ],
@@ -202,7 +231,7 @@ const ast = {
           ],
         },
         {
-          type: 'formItemInList',
+          type: 'formItem',
           children: [
             {
               type: 'formListRemoveItemBtn',
@@ -216,10 +245,21 @@ const ast = {
 }
 
 function App() {
-  const [form] = Form.useForm();
+
   return (
     <>
-      <RenderForm />
+      <RenderForm
+        schema={schema}
+        plugins={[
+          {
+            name: 'firstPlugin',
+            when: 'everyItem',
+            func: ({ setProps }) => {
+
+            },
+          }
+        ]}
+      />
     </>
   )
 }
