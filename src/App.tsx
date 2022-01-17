@@ -1,10 +1,15 @@
-import { Form, Input, Select, Button, FormInstance, Space } from 'antd';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import RenderForm from './easyForm';
-import { EasyFormProps, EasyFormItem, Plugin, BaseSchema } from './easyForm/interface';
-import Parser from './easyForm/parser';
-import React from 'react';
-import parser from './easyForm/parser';
+import { Form, Input, Select, Button, FormInstance, Space } from "antd";
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import RenderForm from "./easyForm";
+import {
+  EasyFormProps,
+  EasyFormItem,
+  Plugin,
+  BaseSchema,
+} from "./easyForm/interface";
+import Parser from "./easyForm/parser";
+import React from "react";
+import parser from "./easyForm/parser";
 
 const formItemLayout = {
   labelCol: {
@@ -24,33 +29,33 @@ const formItemLayoutWithOutLabel = {
 };
 
 const schema: BaseSchema = {
-  name: 'form',
+  name: "form",
   items: [
     // 普通item
     {
-      component: 'input',
-      name: 'name',
-      label: '姓名',
+      component: "input",
+      name: "name",
+      label: "姓名",
       props: {
-        placeholder: '请输入姓名',
-      }
+        placeholder: "请输入姓名",
+      },
     },
 
     // 稍复杂的item
     {
-      type: 'formItem',
-      label: '年龄',
+      type: "formItem",
+      label: "年龄",
       children: [
         {
-          component: 'input',
-          name: 'age',
+          component: "input",
+          name: "age",
           noStyle: true,
         },
         {
-          type: 'reactElement',
-          component: <a>need help?</a>
-        }
-      ]
+          type: "reactElement",
+          component: <a>need help?</a>,
+        },
+      ],
     },
     // {
     //   type: 'formItem',
@@ -83,185 +88,194 @@ const schema: BaseSchema = {
 
     // 有依赖的item
     {
-      name: 'deps',
-      label: '依赖',
-      dependencies: ['age'],
-      component: 'input',
+      name: "deps",
+      label: "依赖",
+      dependencies: ["age"],
+      component: "input",
       props: {
-        disabled: ({ getFieldValue }: FormInstance) => getFieldValue('age') === 10
-      }
+        disabled: ({ getFieldValue }: FormInstance) =>
+          getFieldValue("age") === 10,
+      },
     },
 
     // form list
     {
-      name: 'list',
+      name: "list",
       list: [
         {
-          name: 'first',
-          component: 'input',
+          name: "first",
+          component: "input",
         },
         {
-          name: 'last',
-          component: 'input',
+          name: "last",
+          component: "input",
         },
-      ]
-    }
-  ]
-}
+      ],
+    },
+  ],
+};
 
 const ast = {
-  type: 'form',
-  props: [
-    { type: 'formProps', name: 'name', value: 'easy-antd-form' },
-  ],
+  type: "form",
+  props: [{ type: "formProps", name: "name", value: "easy-antd-form" }],
   children: [
     // 普通item
     {
-      type: 'formItem',
+      type: "formItem",
       props: [
-        { type: 'formItemProps', name: 'name', value: 'name' },
-        { type: 'formItemProps', name: 'label', value: '姓名' },
+        { type: "formItemProps", name: "name", value: "name" },
+        { type: "formItemProps", name: "label", value: "姓名" },
       ],
       children: [
         {
-          type: 'reactElement',
+          type: "reactElement",
           props: [
-            { type: 'reactElementProps', name: 'placeholder', value: '请输入姓名' },
+            {
+              type: "reactElementProps",
+              name: "placeholder",
+              value: "请输入姓名",
+            },
           ],
           component: Input,
-        }
+        },
       ],
     },
 
     // 稍复杂的item
     {
-      type: 'formItem',
-      props: [
-        { type: 'formItemProps', name: 'label', value: '年龄' }
-      ],
+      type: "formItem",
+      props: [{ type: "formItemProps", name: "label", value: "年龄" }],
       children: [
         {
-          type: 'formItem',
+          type: "formItem",
           props: [
-            { type: 'formItemProps', name: 'name', value: 'age' },
-            { type: 'formItemProps', name: 'noStyle', value: true },
+            { type: "formItemProps", name: "name", value: "age" },
+            { type: "formItemProps", name: "noStyle", value: true },
           ],
           children: [
             {
-              type: 'reactElement',
+              type: "reactElement",
               props: [
-                { type: 'reactElementProps', name: 'placeholder', value: '请输入年龄' }
+                {
+                  type: "reactElementProps",
+                  name: "placeholder",
+                  value: "请输入年龄",
+                },
               ],
               component: Input,
-            }
-          ]
+            },
+          ],
         },
         {
-          type: 'reactElement',
-          component: <a>need help?</a>
-        }
-      ]
+          type: "reactElement",
+          component: <a>need help?</a>,
+        },
+      ],
     },
 
     // 有依赖的
     {
-      type: 'formItemWrapper',
+      type: "formItemWrapper",
       props: [
-        { type: 'formItemProps', name: 'dependencies', value: ['age'] },
-        { type: 'formItemProps', name: 'noStyle', value: true },
+        { type: "formItemProps", name: "dependencies", value: ["age"] },
+        { type: "formItemProps", name: "noStyle", value: true },
       ],
       children: [
         {
-          type: 'formItem',
+          type: "formItem",
           props: [
-            { type: 'formItemProps', name: 'name', value: 'deps' },
-            { type: 'formItemProps', name: 'label', value: '依赖' },
+            { type: "formItemProps", name: "name", value: "deps" },
+            { type: "formItemProps", name: "label", value: "依赖" },
           ],
           children: [
             {
-              type: 'reactElement',
+              type: "reactElement",
               component: Input,
               props: [
                 {
-                  type: 'propsWithFunction',
-                  name: 'disabled',
-                  function: ({ getFieldValue }: FormInstance) => getFieldValue('age') === 10
-                }
-              ]
-            }
-          ]
-        }
-      ]
+                  type: "propsWithFunction",
+                  name: "disabled",
+                  function: ({ getFieldValue }: FormInstance) =>
+                    getFieldValue("age") === 10,
+                },
+              ],
+            },
+          ],
+        },
+      ],
     },
 
     // list
     {
-      type: 'formList',
-      props: [
-        { type: 'formListProps', name: 'name', value: 'list' },
-      ],
+      type: "formList",
+      props: [{ type: "formListProps", name: "name", value: "list" }],
       children: [
         {
-          type: 'formListField',
+          type: "formListField",
           children: [
             {
-              type: 'formItem',
-              props: [
-                { type: 'formItemProps', name: 'name', value: 'first' },
-              ],
+              type: "formItem",
+              props: [{ type: "formItemProps", name: "name", value: "first" }],
               children: [
                 {
-                  type: 'reactElement',
+                  type: "reactElement",
                   component: Input,
-                }
-              ]
+                },
+              ],
             },
             {
-              type: 'formItem',
-              props: [
-                { type: 'formItemProps', name: 'name', value: 'last' },
-              ],
+              type: "formItem",
+              props: [{ type: "formItemProps", name: "name", value: "last" }],
               children: [
                 {
-                  type: 'reactElement',
+                  type: "reactElement",
                   component: Input,
-                }
-              ]
-            }
+                },
+              ],
+            },
           ],
         },
         {
-          type: 'formItem',
+          type: "formItem",
           children: [
             {
-              type: 'formListRemoveItemBtn',
+              type: "formListRemoveItemBtn",
               component: <a>remove</a>,
-            }
-          ]
-        }
+            },
+          ],
+        },
       ],
-    }
-  ]
-}
+    },
+  ],
+};
 
 function App() {
+  const [form] = Form.useForm();
 
   return (
     <>
       <RenderForm
-        schema={schema}
-        plugins={[
-          {
-            name: 'firstPlugin',
-            when: 'everyItem',
-            func: ({ setProps }) => {
-
+        schema={{
+          form: form,
+          items: [
+            {
+              type: "formItem",
+              name: "name",
+              label: "姓名",
+              children: [
+                {
+                  component: "input",
+                },
+                {
+                  component: <a>aaa</a>,
+                },
+              ],
             },
-          }
-        ]}
+          ],
+        }}
       />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

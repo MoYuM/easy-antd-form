@@ -3,7 +3,7 @@ import { FormListProps } from 'antd/lib/form';
 
 export type EasyFormProps = {
   schema: BaseSchema
-  plugins: Array<Plugin>
+  plugins?: Array<Plugin>
 }
 
 export type BaseSchema = FormProps & {
