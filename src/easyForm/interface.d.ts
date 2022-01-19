@@ -16,7 +16,7 @@ export type Element = React.ReactElement | React.FC | React.ComponentClass
 export type BaseItem = BaseFormItem | BaseFormList | BaseElement
 
 export type BaseFormItem = FormItemProps & {
-  type?: 'formItem',
+  type: 'item',
   children?: BaseItem[],
   component?: string | Element, // TODO 用map
   props?: any, // TODO 尽量别用any
@@ -27,8 +27,8 @@ export type BaseElement = {
   component: Element,
 }
 
-export type BaseFormList = FormListProps & {
-  type?: 'fromList',
+export type BaseFormList = Omit<FormListProps, 'children'> & {
+  type: 'list',
   list: BaseItem[],
 }
 

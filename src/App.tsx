@@ -33,6 +33,7 @@ const schema: BaseSchema = {
   items: [
     // 普通item
     {
+      type: "item",
       component: "input",
       name: "name",
       label: "姓名",
@@ -43,10 +44,11 @@ const schema: BaseSchema = {
 
     // 稍复杂的item
     {
-      type: "formItem",
+      type: "item",
       label: "年龄",
       children: [
         {
+          type: "item",
           component: "input",
           name: "age",
           noStyle: true,
@@ -88,6 +90,7 @@ const schema: BaseSchema = {
 
     // 有依赖的item
     {
+      type: "item",
       name: "deps",
       label: "依赖",
       dependencies: ["age"],
@@ -100,13 +103,16 @@ const schema: BaseSchema = {
 
     // form list
     {
+      type: "list",
       name: "list",
       list: [
         {
+          type: "item",
           name: "first",
           component: "input",
         },
         {
+          type: "item",
           name: "last",
           component: "input",
         },
@@ -259,17 +265,10 @@ function App() {
           form: form,
           items: [
             {
-              type: "formItem",
+              type: "item",
               name: "name",
               label: "姓名",
-              children: [
-                {
-                  component: "input",
-                },
-                {
-                  component: <a>aaa</a>,
-                },
-              ],
+              component: 'input',
             },
           ],
         }}

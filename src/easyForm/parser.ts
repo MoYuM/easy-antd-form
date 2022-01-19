@@ -63,34 +63,27 @@ function transformProps(props: { [key: string]: any }): Props[] {
 /**
  * 计算type
  */
-function getType(item: any) {
-  const haveList = Array.isArray(item.list) && item.list.length > 0;
-  const haveDeps = Array.isArray(item.dependencies) && item.dependencies.length > 0;
-  const haveUpdate = item.shouldUpdate || typeof item.shouldUpdate === 'function';
-  const isStringComponent = typeof item.component === 'string';
+function getType(item: BaseItem) {
+  const { type } = item;
 
-  // 有 list 一定是 formList
-  if (haveList) {
-    return 'formList';
+  switch (type) {
+    case 'item':
+      const haveDeps = Array.isArray(item.dependencies) && item.dependencies.length > 0;
+      const haveUpdate = item.shouldUpdate || typeof item.shouldUpdate === 'function';
+
+      if (haveDeps || haveUpdate) {
+        return 'formItemWrapper'
+      }
+
+      return 'formItem';
+
+    case 'list':
+      return 'formList';
+    case 'reactElement':
+      return 'reactElement';
+    default:
+      return 'formItem'
   }
-
-  // reactElement 显示指定
-  if (item.type === 'reactElement') {
-    return 'reactElement';
-  }
-
-  // 需要 update 的 formItem
-  if (haveDeps || haveUpdate) {
-    return 'formItemWrapper';
-  }
-
-  // 传 string 类型的 component，视为使用内置组件或扩展组件
-  if (isStringComponent) {
-    return 'formItemWithDefaultElement';
-  }
-
-  // 其余都视为 formItem
-  return 'formItem';
 }
 
 
@@ -214,7 +207,6 @@ function walk(items: BaseItem[]): AST['children'] {
 
     switch (itemType) {
       case 'formItem':
-      case 'formItemWithDefaultElement':
         return {
           type: itemType,
           props: itemProps,
@@ -246,7 +238,7 @@ function walk(items: BaseItem[]): AST['children'] {
         if (item.type === 'reactElement') {
           return {
             type: itemType,
-            component: item.component,
+            component: React.cloneElement(item.component),
           }
         }
       default:
