@@ -3,7 +3,6 @@ import { Form, FormInstance } from "antd";
 import { EasyFormProps } from "./interface";
 import parser from "./parser";
 import transformer from "./transformer";
-import ReactJson from 'react-json-view'
 
 const RenderForm: React.FC<EasyFormProps> = (props) => {
   const { schema, plugins } = props;
@@ -19,13 +18,9 @@ const RenderForm: React.FC<EasyFormProps> = (props) => {
   };
 
   const ast = getAST();
+  console.log("🚀 ~ file: renderForm.tsx ~ line 22 ~ ast", ast);
 
-  return (
-    <>
-      <ReactJson src={ast} theme="ashes" />
-      <Form></Form>
-    </>
-  );
+  return <Form></Form>;
 };
 
 export default RenderForm;

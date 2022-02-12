@@ -416,10 +416,20 @@
   "resolved" "https://registry.npmjs.org/array-tree-filter/-/array-tree-filter-2.1.0.tgz"
   "version" "2.1.0"
 
+"asap@~2.0.3":
+  "integrity" "sha1-5QNHYR1+aQlDIIu9r+vLwvuGbUY="
+  "resolved" "https://registry.npm.taobao.org/asap/download/asap-2.0.6.tgz"
+  "version" "2.0.6"
+
 "async-validator@^4.0.2":
   "integrity" "sha512-Pj2IR7u8hmUEDOwB++su6baaRi+QvsgajuFB9j95foM1N2gy5HM4z60hfusIO0fBPG5uLAEl6yCJr1jNSVugEQ=="
   "resolved" "https://registry.npmjs.org/async-validator/-/async-validator-4.0.7.tgz"
   "version" "4.0.7"
+
+"base16@^1.0.0":
+  "integrity" "sha1-4pf2DX7BAUp6lxo568ipjAtoHnA="
+  "resolved" "https://registry.npm.taobao.org/base16/download/base16-1.0.0.tgz"
+  "version" "1.0.0"
 
 "body-parser@1.19.0":
   "integrity" "sha1-lrJwnlfJxOCab9Zqj9l5hE9p8Io="
@@ -525,6 +535,13 @@
   dependencies:
     "toggle-selection" "^1.0.6"
 
+"cross-fetch@^3.0.4":
+  "integrity" "sha1-lyPzo6JHv4uJA586OAqSROj6Lzk="
+  "resolved" "https://registry.npmmirror.com/cross-fetch/download/cross-fetch-3.1.4.tgz"
+  "version" "3.1.4"
+  dependencies:
+    "node-fetch" "2.6.1"
+
 "csstype@^3.0.2":
   "integrity" "sha512-2u44ZG2OcNUO9HDp/Jl8C07x6pU/eTR3ncV91SiK3dhG9TWvRVsCoJw14Ckx5DgWkzGA3waZWO3d7pgqpUI/XA=="
   "resolved" "https://registry.npmjs.org/csstype/-/csstype-3.0.10.tgz"
@@ -584,9 +601,9 @@
   "resolved" "https://registry.npm.taobao.org/encodeurl/download/encodeurl-1.0.2.tgz"
   "version" "1.0.2"
 
-"esbuild-darwin-64@0.13.15":
-  "integrity" "sha512-ihOQRGs2yyp7t5bArCwnvn2Atr6X4axqPpEdCFPVp7iUj4cVSdisgvEKdNR7yH3JDjW6aQDw40iQFoTqejqxvQ=="
-  "resolved" "https://registry.npmjs.org/esbuild-darwin-64/-/esbuild-darwin-64-0.13.15.tgz"
+"esbuild-windows-64@0.13.15":
+  "integrity" "sha512-9aMsPRGDWCd3bGjUIKG/ZOJPKsiztlxl/Q3C1XDswO6eNX/Jtwu4M+jb6YDH9hRSUflQWX0XKAfWzgy5Wk54JQ=="
+  "resolved" "https://registry.npmjs.org/esbuild-windows-64/-/esbuild-windows-64-0.13.15.tgz"
   "version" "0.13.15"
 
 "esbuild@^0.13.12":
@@ -673,6 +690,31 @@
     "utils-merge" "1.0.1"
     "vary" "~1.1.2"
 
+"fbemitter@^3.0.0":
+  "integrity" "sha1-ALKhr1QRJUqrQWzXX55iib7kv/M="
+  "resolved" "https://registry.nlark.com/fbemitter/download/fbemitter-3.0.0.tgz"
+  "version" "3.0.0"
+  dependencies:
+    "fbjs" "^3.0.0"
+
+"fbjs-css-vars@^1.0.0":
+  "integrity" "sha1-IWVRE2rgL+JVkyw+yHdfGOLAeLg="
+  "resolved" "https://registry.nlark.com/fbjs-css-vars/download/fbjs-css-vars-1.0.2.tgz"
+  "version" "1.0.2"
+
+"fbjs@^3.0.0", "fbjs@^3.0.1":
+  "integrity" "sha512-qv+boqYndjElAJHNN3NoM8XuwQZ1j2m3kEvTgdle8IDjr6oUbkEpvABWtj/rQl3vq4ew7dnElBxL4YJAwTVqQQ=="
+  "resolved" "https://registry.npmmirror.com/fbjs/download/fbjs-3.0.2.tgz"
+  "version" "3.0.2"
+  dependencies:
+    "cross-fetch" "^3.0.4"
+    "fbjs-css-vars" "^1.0.0"
+    "loose-envify" "^1.0.0"
+    "object-assign" "^4.1.0"
+    "promise" "^7.1.1"
+    "setimmediate" "^1.0.5"
+    "ua-parser-js" "^0.7.30"
+
 "finalhandler@~1.1.2":
   "integrity" "sha1-t+fQAP/RGTjQ/bBTUG9uur6fWH0="
   "resolved" "https://registry.npm.taobao.org/finalhandler/download/finalhandler-1.1.2.tgz"
@@ -686,6 +728,14 @@
     "statuses" "~1.5.0"
     "unpipe" "~1.0.0"
 
+"flux@^4.0.1":
+  "integrity" "sha512-yKAbrp7JhZhj6uiT1FTuVMlIAT1J4jqEyBpFApi1kxpGZCvacMVc/t1pMQyotqHhAgvoE3bNvAykhCo2CLjnYw=="
+  "resolved" "https://registry.npmmirror.com/flux/download/flux-4.0.3.tgz"
+  "version" "4.0.3"
+  dependencies:
+    "fbemitter" "^3.0.0"
+    "fbjs" "^3.0.1"
+
 "forwarded@0.2.0":
   "integrity" "sha1-ImmTZCiq1MFcfr6XeahL8LKoGBE="
   "resolved" "https://registry.nlark.com/forwarded/download/forwarded-0.2.0.tgz"
@@ -695,11 +745,6 @@
   "integrity" "sha1-PYyt2Q2XZWn6g1qx+OSyOhBWBac="
   "resolved" "https://registry.npm.taobao.org/fresh/download/fresh-0.5.2.tgz"
   "version" "0.5.2"
-
-"fsevents@~2.3.2":
-  "integrity" "sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA=="
-  "resolved" "https://registry.npmjs.org/fsevents/-/fsevents-2.3.2.tgz"
-  "version" "2.3.2"
 
 "function-bind@^1.1.1":
   "integrity" "sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A=="
@@ -787,12 +832,22 @@
   dependencies:
     "minimist" "^1.2.5"
 
+"lodash.curry@^4.0.1":
+  "integrity" "sha1-JI42By7ekGUB11lmIAqG2riyMXA="
+  "resolved" "https://registry.npm.taobao.org/lodash.curry/download/lodash.curry-4.1.1.tgz"
+  "version" "4.1.1"
+
+"lodash.flow@^3.3.0":
+  "integrity" "sha1-h79AKSuM+D5OjOGjrkIJ4gBxZ1o="
+  "resolved" "https://registry.npm.taobao.org/lodash.flow/download/lodash.flow-3.5.0.tgz"
+  "version" "3.5.0"
+
 "lodash@^4.17.21":
   "integrity" "sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg=="
   "resolved" "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz"
   "version" "4.17.21"
 
-"loose-envify@^1.1.0":
+"loose-envify@^1.0.0", "loose-envify@^1.1.0":
   "integrity" "sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q=="
   "resolved" "https://registry.npmjs.org/loose-envify/-/loose-envify-1.4.0.tgz"
   "version" "1.4.0"
@@ -871,12 +926,17 @@
   "resolved" "https://registry.npm.taobao.org/negotiator/download/negotiator-0.6.2.tgz"
   "version" "0.6.2"
 
+"node-fetch@2.6.1":
+  "integrity" "sha1-BFvTI2Mfdu0uK1VXM5RBa2OaAFI="
+  "resolved" "https://registry.npmmirror.com/node-fetch/download/node-fetch-2.6.1.tgz"
+  "version" "2.6.1"
+
 "node-releases@^2.0.1":
   "integrity" "sha512-CqyzN6z7Q6aMeF/ktcMVTzhAHCEpf8SOarwpzpf8pNBY2k5/oM34UHldUwp8VKI7uxct2HxSRdJjBaZeESzcxA=="
   "resolved" "https://registry.npmjs.org/node-releases/-/node-releases-2.0.1.tgz"
   "version" "2.0.1"
 
-"object-assign@^4.1.1":
+"object-assign@^4.1.0", "object-assign@^4.1.1":
   "integrity" "sha1-IQmtx5ZYh8/AXLvUQsrIv7s2CGM="
   "resolved" "https://registry.npmjs.org/object-assign/-/object-assign-4.1.1.tgz"
   "version" "4.1.1"
@@ -922,6 +982,13 @@
     "picocolors" "^1.0.0"
     "source-map-js" "^1.0.1"
 
+"promise@^7.1.1":
+  "integrity" "sha1-BktyYCsY+Q8pGSuLG8QY/9Hr078="
+  "resolved" "https://registry.nlark.com/promise/download/promise-7.3.1.tgz"
+  "version" "7.3.1"
+  dependencies:
+    "asap" "~2.0.3"
+
 "proxy-addr@~2.0.5":
   "integrity" "sha1-8Z/mnOqzEe65S0LnDowgcPm6ECU="
   "resolved" "https://registry.nlark.com/proxy-addr/download/proxy-addr-2.0.7.tgz"
@@ -929,6 +996,11 @@
   dependencies:
     "forwarded" "0.2.0"
     "ipaddr.js" "1.9.1"
+
+"pure-color@^1.2.0":
+  "integrity" "sha1-H+Bk+wrIUfDeYTIKi/eWg2Qi8z4="
+  "resolved" "https://registry.npm.taobao.org/pure-color/download/pure-color-1.3.0.tgz"
+  "version" "1.3.0"
 
 "qs@6.7.0":
   "integrity" "sha1-QdwaAV49WB8WIXdr4xr7KHapsbw="
@@ -1297,7 +1369,17 @@
     "rc-resize-observer" "^1.0.0"
     "rc-util" "^5.0.7"
 
-"react-dom@*", "react-dom@^17.0.0", "react-dom@>= 16.9.0", "react-dom@>=16.0.0", "react-dom@>=16.9.0":
+"react-base16-styling@^0.6.0":
+  "integrity" "sha1-7yFW1mz0E5aVyKFniGy2nqZgeSw="
+  "resolved" "https://registry.npmmirror.com/react-base16-styling/download/react-base16-styling-0.6.0.tgz"
+  "version" "0.6.0"
+  dependencies:
+    "base16" "^1.0.0"
+    "lodash.curry" "^4.0.1"
+    "lodash.flow" "^3.3.0"
+    "pure-color" "^1.2.0"
+
+"react-dom@*", "react-dom@^17.0.0", "react-dom@^17.0.0 || ^16.3.0 || ^15.5.4", "react-dom@>= 16.9.0", "react-dom@>=16.0.0", "react-dom@>=16.9.0":
   "integrity" "sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA=="
   "resolved" "https://registry.npmjs.org/react-dom/-/react-dom-17.0.2.tgz"
   "version" "17.0.2"
@@ -1315,6 +1397,21 @@
   "integrity" "sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w=="
   "resolved" "https://registry.npmjs.org/react-is/-/react-is-17.0.2.tgz"
   "version" "17.0.2"
+
+"react-json-view@^1.21.3":
+  "integrity" "sha1-8YQgnujxvzdPsMQbCBPP9UVJxHU="
+  "resolved" "https://registry.npm.taobao.org/react-json-view/download/react-json-view-1.21.3.tgz"
+  "version" "1.21.3"
+  dependencies:
+    "flux" "^4.0.1"
+    "react-base16-styling" "^0.6.0"
+    "react-lifecycles-compat" "^3.0.4"
+    "react-textarea-autosize" "^8.3.2"
+
+"react-lifecycles-compat@^3.0.4":
+  "integrity" "sha1-TxonOv38jzSIqMUWv9p4+HI1I2I="
+  "resolved" "https://registry.npmmirror.com/react-lifecycles-compat/download/react-lifecycles-compat-3.0.4.tgz"
+  "version" "3.0.4"
 
 "react-refresh@^0.11.0":
   "integrity" "sha512-F27qZr8uUqwhWZboondsPx8tnC3Ct3SxZA3V5WyEvujRyyNv0VYPhoBg1gZ8/MV5tubQp76Trw8lTv9hzRBa+A=="
@@ -1339,7 +1436,16 @@
     "react-shallow-renderer" "^16.13.1"
     "scheduler" "^0.20.2"
 
-"react@*", "react@^16.0.0 || ^17.0.0", "react@^17.0.0", "react@>= 16.9.0", "react@>=16.0.0", "react@>=16.9.0", "react@17.0.2":
+"react-textarea-autosize@^8.3.2":
+  "integrity" "sha1-9wkTlFNp2kU/1VTBaPa6rNH6BNg="
+  "resolved" "https://registry.nlark.com/react-textarea-autosize/download/react-textarea-autosize-8.3.3.tgz"
+  "version" "8.3.3"
+  dependencies:
+    "@babel/runtime" "^7.10.2"
+    "use-composed-ref" "^1.0.0"
+    "use-latest" "^1.0.0"
+
+"react@*", "react@^15.0.2 || ^16.0.0 || ^17.0.0", "react@^16.0.0 || ^17.0.0", "react@^16.8.0 || ^17.0.0", "react@^17.0.0", "react@^17.0.0 || ^16.3.0 || ^15.5.4", "react@>= 16.9.0", "react@>=16.0.0", "react@>=16.9.0", "react@17.0.2":
   "integrity" "sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA=="
   "resolved" "https://registry.npmjs.org/react/-/react-17.0.2.tgz"
   "version" "17.0.2"
@@ -1431,6 +1537,11 @@
     "parseurl" "~1.3.3"
     "send" "0.17.1"
 
+"setimmediate@^1.0.5":
+  "integrity" "sha512-MATJdZp8sLqDl/68LfQmbP8zKPLQNV6BIZoIgrscFDQ+RsvK/BxeDQOgyxKKoh0y/8h3BqVFnCqQ/gd+reiIXA=="
+  "resolved" "https://registry.npmmirror.com/setimmediate/download/setimmediate-1.0.5.tgz"
+  "version" "1.0.5"
+
 "setprototypeof@1.1.1":
   "integrity" "sha1-fpWsskqpL1iF4KvvW6ExMw1K5oM="
   "resolved" "https://registry.npm.taobao.org/setprototypeof/download/setprototypeof-1.1.1.tgz"
@@ -1496,10 +1607,32 @@
   "resolved" "https://registry.npmjs.org/typescript/-/typescript-4.5.4.tgz"
   "version" "4.5.4"
 
+"ua-parser-js@^0.7.30":
+  "integrity" "sha1-ZJplaxkd/6tPIdXgU+J8oXy/9cY="
+  "resolved" "https://registry.npmmirror.com/ua-parser-js/download/ua-parser-js-0.7.31.tgz"
+  "version" "0.7.31"
+
 "unpipe@~1.0.0", "unpipe@1.0.0":
   "integrity" "sha1-sr9O6FFKrmFltIF4KdIbLvSZBOw="
   "resolved" "https://registry.npm.taobao.org/unpipe/download/unpipe-1.0.0.tgz"
   "version" "1.0.0"
+
+"use-composed-ref@^1.0.0":
+  "integrity" "sha512-6+X1FLlIcjvFMAeAD/hcxDT8tmyrWnbSPMU0EnxQuDLIxokuFzWliXBiYZuGIx+mrAMLBw0WFfCkaPw8ebzAhw=="
+  "resolved" "https://registry.npmmirror.com/use-composed-ref/download/use-composed-ref-1.2.1.tgz"
+  "version" "1.2.1"
+
+"use-isomorphic-layout-effect@^1.0.0":
+  "integrity" "sha1-e7ZYkXDNKYehUgQvkIT57/t1wiU="
+  "resolved" "https://registry.npmmirror.com/use-isomorphic-layout-effect/download/use-isomorphic-layout-effect-1.1.1.tgz"
+  "version" "1.1.1"
+
+"use-latest@^1.0.0":
+  "integrity" "sha1-pE9lcrgojgly7EEb3QhAraNm8jI="
+  "resolved" "https://registry.npm.taobao.org/use-latest/download/use-latest-1.2.0.tgz"
+  "version" "1.2.0"
+  dependencies:
+    "use-isomorphic-layout-effect" "^1.0.0"
 
 "utils-merge@1.0.1":
   "integrity" "sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM="
