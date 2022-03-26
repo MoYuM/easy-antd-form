@@ -14,50 +14,70 @@ type VisitorFunc = (node: Node, parent: Parent) => void
 function transformer(ast: AST, plugins: Plugin[]): AST {
   const newAst: AST = {
     type: 'form',
-    props: [],
+    props: {},
     children: [],
   }
 
   traverser(ast, {
     'form': {
       enter: (node, parent) => {
-        const setProps = createSetFunc(node);
+        console.log(node)
+        return node;
       }
     },
     'formItem': {
-      enter: (node, parent) => {
-        const setProps = createSetFunc(node);
+      enter: (node) => {
+        return node;
 
       }
     },
     'formItemWrapper': {
-      enter: () => { }
+      enter: (node) => {
+        return node;
+
+      }
     },
     'formList': {
-      enter: () => { }
+      enter: (node) => {
+        return node;
+
+      }
     },
     'formListAddBtn': {
-      enter: () => { }
+      enter: (node) => {
+        return node;
+
+      }
     },
     'formListField': {
-      enter: () => { }
+      enter: (node) => {
+        return node;
+
+      }
     },
     'formListRemoveBtn': {
-      enter: () => { }
+      enter: (node) => {
+        return node;
+
+      }
     },
     'reactElement': {
-      enter: (node, parent) => {
-        const funcs = plugins.filter(i => i.when === 'select');
-
-        const setProps = createSetFunc(node);
+      enter: (node) => {
+        return node;
 
       }
     },
     'formItemWithDefaultElement': {
-      enter: () => { }
+      enter: (node) => {
+        return node;
+
+      }
     },
     'defaultElement': {
-      enter: () => { }
+      enter: (node) => {
+        return node;
+
+      }
     }
   })
 
@@ -72,21 +92,25 @@ function transformer(ast: AST, plugins: Plugin[]): AST {
  */
 function traverser(ast: AST, visitor: Record<ASTtypes | 'form', { enter: VisitorFunc, exit?: VisitorFunc }>) {
 
-  function traverseArray(array: AST['children'], parant: Parent) {
+  function traverseArray(array: AST['children'], parent: Parent) {
     array.forEach(node => {
-      traversNode(node, parant);
+      traversNode(node, parent);
     })
   }
 
-  function traversNode(node: Node, parant: Parent) {
+  function traversNode(node: Node, parent: Parent) {
     const methods = visitor[node.type];
 
-    if (methods.enter) {
-      methods.enter(node, parant);
+    if (methods?.enter) {
+      methods.enter(node, parent);
     }
 
     if (node.children) {
-      traverseArray(node.children, parant);
+      if (Array.isArray(node.children)) {
+        traverseArray(node.children, parent);
+      } else {
+        traversNode(node.children, node);
+      }
     }
   }
 
