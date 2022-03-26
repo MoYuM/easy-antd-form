@@ -282,7 +282,6 @@ function App() {
 
   // 最简单的情况
   const normal: BaseSchema = {
-    form,
     type: "form",
     items: [
       {
@@ -291,13 +290,18 @@ function App() {
         label: "姓名",
         component: "input",
       },
+      {
+        type: "item",
+        name: "age",
+        label: "年龄",
+        component: "select",
+      },
     ],
   };
 
   // 需要插入额外组件的情况
   // （如果是form render的话，这里就要额外写一个自定义组件，我希望简化这个步骤）
   const normalAndReactElement: BaseSchema = {
-    form,
     type: "form",
     items: [
       {
@@ -321,7 +325,6 @@ function App() {
   // 有依赖的item
   // 通过传入函数的形式，实现 dependencies 和 shouldupdate 的功能
   const haveDepsItem: BaseSchema = {
-    form,
     type: "form",
     items: [
       {
@@ -353,11 +356,29 @@ function App() {
     ],
   };
 
-  return (
-    <>
-      <RenderForm schema={haveDepsItem} />
-    </>
-  );
+  // list
+  // list 是 easy-antd-form 的重点，会做很多的简化
+  // 代价就是需要 easy-antd-form 帮开发者做一些决定
+  // 解决办法就是留出自定义的接口
+  const listForm: BaseSchema = {
+    type: "form",
+    items: [
+      {
+        type: "list",
+        name: "names",
+        rules: [],
+        fields: [
+          {
+            type: "item",
+            label: "姓名",
+            component: "input",
+          },
+        ],
+      },
+    ],
+  };
+
+  return <RenderForm form={form} schema={listForm} />;
 }
 
 export default App;

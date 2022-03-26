@@ -1,12 +1,12 @@
 import { FormItemProps, FormProps } from 'antd';
 import { FormListProps } from 'antd/lib/form';
 
-export type EasyFormProps = {
+export type EasyFormProps = FormProps & {
   schema: BaseSchema
   plugins?: Array<Plugin>
 }
 
-export type BaseSchema = FormProps & {
+export type BaseSchema = {
   type?: 'form',
   items: Array<BaseItem>,
 }
@@ -29,7 +29,7 @@ export type BaseElement = {
 
 export type BaseFormList = Omit<FormListProps, 'children'> & {
   type: 'list',
-  list: BaseItem[],
+  fields: BaseItem[],
 }
 
 export type Props = {
@@ -52,25 +52,25 @@ export type ASTtypes =
 
 export type AST = {
   type: 'form',
-  props?: Array<Props>,
+  props?: Record<string, any>,
   children: Array<DefaultElementAST | ReactElementAST | FormItemAST | FormListBtnAST | undefined>
 }
 
 export type DefaultElementAST = {
   type: 'defaultElement',
-  props?: Array<Props>,
+  props?: Record<string, any>,
   component: string,
 }
 
 export type ReactElementAST = {
   type: 'reactElement',
-  props?: Array<Props>,
+  props?: Record<string, any>,
   component: Element
 }
 
 export type FormItemAST = {
   type: 'formItem' | 'formList' | 'formListField' | 'formItemWrapper' | 'formItemWithDefaultElement'
-  props?: Array<Props>,
+  props?: Record<string, any>,
   children: AST['children']
 }
 

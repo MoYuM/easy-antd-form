@@ -19,12 +19,11 @@ import React from 'react';
  * @returns ast
  */
 function parser(schema: BaseSchema): AST {
-  const { items, ...restProps } = schema;
 
   const ast: AST = {
     type: 'form',
-    props: transformProps(restProps),
-    children: walk(items),
+    props: {},
+    children: walk(schema.items),
   }
 
   return ast;
@@ -34,29 +33,8 @@ function parser(schema: BaseSchema): AST {
 /**
  * 转换props对象为list
  */
-function transformProps(props: { [key: string]: any }): Props[] {
-  const propsList: Props[] = [];
-
-  for (const name in props) {
-    if (Object.prototype.hasOwnProperty.call(props, name)) {
-      const value = props[name];
-      if (typeof value === 'function') {
-        propsList.push({
-          type: 'propsWithFunction',
-          name,
-          value,
-        })
-      } else {
-        propsList.push({
-          type: 'props',
-          name,
-          value,
-        })
-      }
-    }
-  }
-
-  return propsList;
+function transformProps(props: { [key: string]: any }) {
+  return props || {};
 }
 
 
@@ -82,7 +60,7 @@ function getType(item: BaseItem) {
     case 'reactElement':
       return 'reactElement';
     default:
-      return 'formItem'
+      return type;
   }
 }
 
@@ -110,7 +88,7 @@ function getComponent(name?: string) {
 function getFormItemChildren(item: BaseFormItem, type: 'formItem' | 'formItemWrapper' | 'formItemWithDefaultElement'): AST['children'] {
   const haveChildren = Array.isArray(item.children) && item.children.length > 0;
   const props = transformProps(item.props);
-  const children: AST['children'] = [];
+  let children: AST['children'] | AST['children'][number] = [];
 
   // 有children代表时稍复杂的item
   if (haveChildren && (type === 'formItem' || type === 'formItemWithDefaultElement')) {
@@ -124,11 +102,11 @@ function getFormItemChildren(item: BaseFormItem, type: 'formItem' | 'formItemWra
       return children;
     }
 
-    children.push({
+    children = {
       type: 'reactElement',
       props,
       component: item.component as Element,
-    })
+    }
   }
 
   // 最基本的item，使用了内置组件
@@ -149,11 +127,11 @@ function getFormItemChildren(item: BaseFormItem, type: 'formItem' | 'formItemWra
     const needOmitKey = ['type', 'component', 'children', 'props', 'dependencies', 'shouldUpdate'];
     const itemProps = transformProps(omit(item, needOmitKey));
 
-    children.push({
+    return {
       type: 'formItem',
       props: itemProps,
       children: getFormItemChildren(omit(item, ['dependencies', 'shouldUpdate']), 'formItem')
-    })
+    }
   }
 
   return children;
@@ -161,33 +139,44 @@ function getFormItemChildren(item: BaseFormItem, type: 'formItem' | 'formItemWra
 
 
 function getFormListChildren(item: BaseFormList): AST['children'] {
-  const haveList = Array.isArray(item.list) && item.list.length > 0;
+  const haveFields = Array.isArray(item.fields) && item.fields.length > 0;
   const children: AST['children'] = [];
 
-  if (!haveList) {
-    error(`list 不存在，请检查 schema`)
+  if (!haveFields) {
+    error(`formList 不存在 fields ，请检查 schema`)
     return children;
+  }
+
+  const removeBtn = {
+    type: 'formListRemoveBtn',
+    props: {},
+    component: 'button',
+  }
+
+  const addBtn = {
+    type: 'formListAddBtn',
+    props: {},
+    component: 'button',
+  }
+
+  const listError = {
+    type: 'formListError',
   }
 
   const formListField: AST['children'][number] = {
     type: 'formListField',
-    props: [], // TODO 这里还有空间加 props
-    children: walk(item.list) || [],
+    props: {}, // TODO 这里还有空间加 props
+    children: walk([...item.fields, removeBtn]) || [],
   }
 
-  // 给一个默认的删除按钮
-  formListField.children?.push({
-    type: 'formListRemoveBtn'
-  })
 
   children.push(formListField);
-
-  // 给一个默认的添加按钮
   children.push({
     type: 'formItem',
-    children: [{
-      type: 'formListAddBtn',
-    }]
+    children: [
+      addBtn,
+      listError,
+    ]
   })
 
   return children;
@@ -200,9 +189,9 @@ function getFormListChildren(item: BaseFormList): AST['children'] {
 function walk(items: BaseItem[]): AST['children'] {
   if (!items) return [];
 
-  const result: AST['children'] = items.map(item => {
+  const walker = (item: BaseItem) => {
     const itemType = getType(item);
-    const restProps = omit(item, ['type', 'component', 'children', 'props']);
+    const restProps = omit(item, ['type', 'component', 'children', 'props', 'fields']);
     const itemProps = transformProps(restProps);
 
     switch (itemType) {
@@ -214,13 +203,11 @@ function walk(items: BaseItem[]): AST['children'] {
         }
 
       case 'formItemWrapper':
-        const props: Props[] = [
-          { type: 'props', name: 'noStyle', value: true },
-          ...transformProps({
-            dependencies: restProps.dependencies,
-            shouldUpdate: restProps.shouldUpdate,
-          })
-        ];
+        const props = {
+          noStyle: true,
+          dependencies: restProps.dependencies,
+          shouldUpdate: restProps.shouldUpdate,
+        }
         return {
           type: itemType,
           props,
@@ -241,13 +228,30 @@ function walk(items: BaseItem[]): AST['children'] {
             component: React.cloneElement(item.component),
           }
         }
+
+      case 'formListRemoveBtn':
+      case 'formListAddBtn':
+        return {
+          type: itemType,
+          props: {},
+          component: 'button',
+        }
+
       default:
-        error(`无法判断formItem类型，请检查 schema`);
+        error(`无法判断formItem类型 ，请检查 schema`);
         break;
     }
-  })
+  }
 
-  return result;
+
+  // 如果只有一个子元素就不返回数组了，这一点和 React 一致
+  if (items.length === 1) {
+    return walker(items[0])
+  } else {
+    return items.map(item => {
+      return walker(item);
+    })
+  }
 }
 
 
