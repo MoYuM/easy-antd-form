@@ -1,3 +1,4 @@
+import { cloneDeep } from 'lodash';
 import { AST, ASTtypes, Plugin, Node, Parent } from './interface';
 
 
@@ -12,23 +13,35 @@ type VisitorFunc = (node: Node, parent: Parent) => void
  * @returns new ast
  */
 function transformer(ast: AST, plugins: Plugin[]): AST {
-  const newAst: AST = {
-    type: 'form',
-    props: {},
-    children: [],
+
+  if (Array.isArray(plugins) && plugins.length < 1) {
+    return ast;
   }
 
-  traverser(ast, {
+  /** 
+   * TODO 可以直接改参数么？
+   * 先这样写吧。。。。
+   * 
+   * 那么如何定义一个插件呢？
+   * 
+   * 
+   */
+
+
+  const test = {
+    formItem(path) {
+    }
+  }
+
+
+
+  traverser(ast, [test], {
     'form': {
       enter: (node, parent) => {
-        console.log(node)
-        return node;
       }
     },
     'formItem': {
       enter: (node) => {
-        return node;
-
       }
     },
     'formItemWrapper': {
@@ -82,7 +95,7 @@ function transformer(ast: AST, plugins: Plugin[]): AST {
   })
 
 
-  return newAst;
+  return ast;
 }
 
 /**
@@ -90,7 +103,7 @@ function transformer(ast: AST, plugins: Plugin[]): AST {
  * @param ast 
  * @param visitor 
  */
-function traverser(ast: AST, visitor: Record<ASTtypes | 'form', { enter: VisitorFunc, exit?: VisitorFunc }>) {
+function traverser(ast: AST, plugins: any[], visitor: Record<ASTtypes | 'form', { enter: VisitorFunc, exit?: VisitorFunc }>) {
 
   function traverseArray(array: AST['children'], parent: Parent) {
     array.forEach(node => {
@@ -105,6 +118,21 @@ function traverser(ast: AST, visitor: Record<ASTtypes | 'form', { enter: Visitor
       methods.enter(node, parent);
     }
 
+    if (Array.isArray(plugins) && plugins.length > 0) {
+      plugins.forEach(plugin => {
+        const pluginMethod = plugin[node?.type];
+        const path = {
+          node,
+
+        }
+
+        if (typeof pluginMethod === 'function') {
+
+          pluginMethod(path);
+        }
+      })
+    }
+
     if (node.children) {
       if (Array.isArray(node.children)) {
         traverseArray(node.children, parent);
@@ -115,20 +143,6 @@ function traverser(ast: AST, visitor: Record<ASTtypes | 'form', { enter: Visitor
   }
 
   traversNode(ast, null);
-}
-
-
-function createSetFunc(obj: Node) {
-  let newObj = { ...obj };
-
-  function setProps(props: Record<string, any>) {
-    newObj = {
-      ...newObj,
-      ...props,
-    }
-  }
-
-  return setProps;
 }
 
 export default transformer;

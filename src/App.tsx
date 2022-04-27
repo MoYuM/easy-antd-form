@@ -289,12 +289,21 @@ function App() {
         name: "name",
         label: "姓名",
         component: "input",
+        props: {
+          placeholder: "请输入",
+        },
       },
       {
         type: "item",
         name: "age",
         label: "年龄",
         component: "select",
+        props: {
+          options: [
+            { value: 1, label: "111" },
+            { value: 2, label: "222" },
+          ],
+        },
       },
     ],
   };
@@ -378,7 +387,7 @@ function App() {
     ],
   };
 
-  return <RenderForm form={form} schema={listForm} />;
+  return <RenderForm form={form} schema={normalAndReactElement} />;
 }
 
 export default App;

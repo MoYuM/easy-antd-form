@@ -105,7 +105,7 @@ function getFormItemChildren(item: BaseFormItem, type: 'formItem' | 'formItemWra
     children = {
       type: 'reactElement',
       props,
-      component: item.component as Element,
+      component: getComponent(item.component) as Element,
     }
   }
 
