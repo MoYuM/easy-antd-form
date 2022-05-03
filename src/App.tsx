@@ -350,16 +350,13 @@ function App() {
       },
       {
         type: "item",
-        label: "年龄",
         name: "age",
         dependencies: ["gender"],
         component: "input",
         // TODO 这里TS不对
-        hidden: ({ getFieldValue }: FormInstance) =>
-          getFieldValue("gender") === "female",
+        label: ({ getFieldValue }: FormInstance) => getFieldValue("gender") === "female" ? '女年龄' : '男年龄',
         props: {
-          disabled: ({ getFieldValue }: FormInstance) =>
-            getFieldValue("gender") === "male",
+          disabled: ({ getFieldValue }: FormInstance) => getFieldValue("gender") === "male",
         },
       },
     ],
@@ -387,7 +384,11 @@ function App() {
     ],
   };
 
-  return <RenderForm form={form} schema={normalAndReactElement} />;
+  return (
+    <div style={{ margin: "100px" }}>
+      <RenderForm form={form} schema={haveDepsItem} />;
+    </div>
+  );
 }
 
 export default App;

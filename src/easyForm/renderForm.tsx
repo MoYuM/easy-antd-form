@@ -1,16 +1,8 @@
-import React, { ReactElement } from "react";
-import { Form, FormInstance, Input, Select } from "antd";
+import React from "react";
 import { AST, EasyFormProps } from "./interface";
 import parser from "./parser";
 import transformer from "./transformer";
 import { COMPONENT_MAP } from "./constant";
-const elementMap = {
-  form: <Form />,
-  formItem: <Form.Item />,
-  formList: <Form.List />,
-  input: <Input />,
-  select: <Select />,
-};
 
 const RenderForm: React.FC<EasyFormProps> = (props) => {
   const { schema, plugins } = props;
@@ -20,23 +12,20 @@ const RenderForm: React.FC<EasyFormProps> = (props) => {
 
   console.log("%cfinallyAST", "backgroud:red", finallyAST);
 
-  const render = (ast?: AST["children"] | AST, index?: number) => {
+  const render = (ast?: AST["children"] | AST, index?: number, formInstance?: any) => {
     if (!ast) return null;
 
     if (Array.isArray(ast)) {
       return ast.map(render);
     } else {
-      const element =
-        ast.type === "reactElement" ? ast.component : COMPONENT_MAP[ast.type];
-      console.log(typeof element?.props?.children);
+      const element = ast.type === "reactElement" ? ast.component : COMPONENT_MAP[ast.type];
       if (typeof element?.props?.children === "string") {
-        const result = React.cloneElement(element, {
+        return React.cloneElement(element, {
           ...ast.props,
           key: index,
         });
-        console.log("%cresult", "background:yellow", result);
-        return result;
-      } else {
+      }
+      if (ast.props.dependencies || ast.props.shouldUpdate) {
         return React.cloneElement(
           element,
           {
@@ -44,8 +33,43 @@ const RenderForm: React.FC<EasyFormProps> = (props) => {
             key: index,
           },
           render(ast.children)
-        );
+        )
       }
+
+      if (ast.type === 'formItemWithFuncProps') {
+        return (formInstance) => {
+          let newProps = { ...ast.props }; // 这里不能改变原有 props，需要创建一个新的对象
+          Object.keys(ast.props).forEach(p => {
+            if (typeof ast.props[p] === 'function') {
+              newProps[p] = ast.props[p]?.(formInstance)
+            }
+          })
+
+          return React.cloneElement(
+            element,
+            {
+              ...newProps,
+            },
+            render(ast.children, undefined, formInstance)
+          )
+
+        }
+      }
+
+      let newProps = { ...ast.props }; // 这里不能改变原有 props，需要创建一个新的对象
+      Object.keys(ast.props).forEach(p => {
+        if (typeof ast.props[p] === 'function') {
+          newProps[p] = ast.props[p]?.(formInstance)
+        }
+      })
+      return React.cloneElement(
+        element,
+        {
+          ...newProps,
+          key: index,
+        },
+        render(ast.children)
+      );
     }
   };
 

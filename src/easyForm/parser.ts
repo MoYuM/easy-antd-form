@@ -85,7 +85,7 @@ function getComponent(name?: string) {
  * 计算children
  * formItem
  */
-function getFormItemChildren(item: BaseFormItem, type: 'formItem' | 'formItemWrapper' | 'formItemWithDefaultElement'): AST['children'] {
+function getFormItemChildren(item: BaseFormItem, type: string): AST['children'] {
   const haveChildren = Array.isArray(item.children) && item.children.length > 0;
   const props = transformProps(item.props);
   let children: AST['children'] | AST['children'][number] = [];
@@ -128,9 +128,12 @@ function getFormItemChildren(item: BaseFormItem, type: 'formItem' | 'formItemWra
     const itemProps = transformProps(omit(item, needOmitKey));
 
     return {
-      type: 'formItem',
+      type: 'formItemWithFuncProps',
       props: itemProps,
-      children: getFormItemChildren(omit(item, ['dependencies', 'shouldUpdate']), 'formItem')
+      children: getFormItemChildren(
+        omit(item, ['dependencies', 'shouldUpdate']),
+        'formItem'
+      )
     }
   }
 
