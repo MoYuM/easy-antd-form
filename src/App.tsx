@@ -386,7 +386,7 @@ function App() {
 
   return (
     <div style={{ margin: "100px" }}>
-      <RenderForm form={form} schema={haveDepsItem} />
+      <RenderForm form={form} schema={listForm} />
     </div>
   );
 }

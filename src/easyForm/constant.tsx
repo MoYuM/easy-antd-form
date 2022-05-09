@@ -1,6 +1,6 @@
-import { Input, Select, Form } from "antd";
+import { Input, Select, Form, Button } from "antd";
 
-export const COMPONENT_MAP: Record<string, React.FC | React.ComponentClass> = {
+export const COMPONENT_MAP: Record<string, JSX.Element> = {
   form: <Form />,
   formItem: <Form.Item />,
   formItemWithFuncProps: <Form.Item />,
@@ -8,4 +8,6 @@ export const COMPONENT_MAP: Record<string, React.FC | React.ComponentClass> = {
   input: <Input />,
   select: <Select />,
   formItemWrapper: <Form.Item />,
+  button: <Button />,
+  formListError: <Form.ErrorList />
 };
