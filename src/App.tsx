@@ -392,7 +392,7 @@ function App() {
   return (
     <div style={{ margin: "100px" }}>
       <h1>Easy Antd Form</h1>
-      <RenderForm form={form} schema={listForm} />
+      <RenderForm form={form} schema={haveDepsItem} />
     </div>
   );
 }

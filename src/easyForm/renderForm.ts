@@ -37,6 +37,8 @@ const RenderForm: React.FC<EasyFormProps> = (props) => {
       return ast.map((a, i) => render(a, i, extra));
     } else {
       const element = getElement(ast);
+
+      // children 是 text 的情况
       if (
         typeof element?.props?.children === "string" &&
         ast.type !== 'formListAddBtn' && // 这两个在下面单独处理
@@ -48,34 +50,21 @@ const RenderForm: React.FC<EasyFormProps> = (props) => {
         });
       }
 
-      // dependencies 单独处理
-      // TODO 这里有用么？要不删掉
-      if (ast.props?.dependencies || ast.props?.shouldUpdate) {
-        return React.cloneElement(
-          element,
-          {
-            ...ast.props,
-            key: index,
-          },
-          render(ast.children)
-        )
-      }
 
       if (ast.type === 'formItemWithFuncProps') {
         return (formInstance) => {
           let newProps = { ...ast.props }; // 这里不能改变原有 props，需要创建一个新的对象
           Object.keys(ast.props || {}).forEach(p => {
-            if (typeof ast.props[p] === 'function') {
-              newProps[p] = ast.props[p]?.(formInstance)
+            if (typeof newProps[p] === 'function') {
+              newProps[p] = newProps[p]?.(formInstance)
             }
           })
-
           return React.cloneElement(
             element,
             {
               ...newProps,
             },
-            render(ast.children, undefined, formInstance)
+            render(ast.children, index, { formInstance })
           )
 
         }
@@ -100,8 +89,8 @@ const RenderForm: React.FC<EasyFormProps> = (props) => {
                 React.Fragment,
                 {
                   children: [
-                    render(fields, index, { fields: _fields, ...actions }),
-                    render(items, index, { ...actions })
+                    render(fields, 0, { fields: _fields, ...actions }),
+                    render(items, 1, { ...actions })
                   ]
                 }
               )
@@ -116,9 +105,7 @@ const RenderForm: React.FC<EasyFormProps> = (props) => {
           {
             ...ast.props,
             key: index,
-            onClick: () => {
-              add();
-            }
+            onClick: () => add()
           },
         )
       }
@@ -137,9 +124,9 @@ const RenderForm: React.FC<EasyFormProps> = (props) => {
 
 
       let newProps = { ...ast.props }; // 这里不能改变原有 props，需要创建一个新的对象
-      Object.keys(ast.props | {}).forEach(p => {
-        if (typeof ast.props[p] === 'function') {
-          newProps[p] = ast.props[p]?.(formInstance)
+      Object.keys(newProps || {}).forEach(p => {
+        if (typeof newProps[p] === 'function') {
+          newProps[p] = newProps[p]?.(formInstance)
         }
       })
 
