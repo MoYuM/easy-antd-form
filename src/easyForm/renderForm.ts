@@ -9,7 +9,6 @@ const RenderForm: React.FC<EasyFormProps> = (props) => {
 
   const ast = parser(schema);
   const finallyAST = transformer(ast, plugins);
-  const addRef = React.useRef(null);
 
   const getElement = (ast) => {
     if (ast.type === 'reactElement') {
@@ -155,7 +154,7 @@ const RenderForm: React.FC<EasyFormProps> = (props) => {
     }
   };
   console.log('%crender(finallyAST)', 'background:yellow', render(finallyAST))
-  return <>{render(finallyAST)}</>;
+  return render(finallyAST);
 };
 
 export default RenderForm;
