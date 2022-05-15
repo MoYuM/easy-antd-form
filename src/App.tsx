@@ -1,4 +1,4 @@
-import { Form, Input, Select, Button, FormInstance, Space } from "antd";
+import { Form, Input, Select, Button, FormInstance, Space, } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import RenderForm from "./easyForm";
 import { EasyFormProps, Plugin, BaseSchema } from "./easyForm/interface";
@@ -379,6 +379,11 @@ function App() {
             label: "姓名",
             component: "input",
           },
+          {
+            type: 'item',
+            label: '年龄',
+            component: 'input',
+          }
         ],
       },
     ],
@@ -386,6 +391,7 @@ function App() {
 
   return (
     <div style={{ margin: "100px" }}>
+      <h1>Easy Antd Form</h1>
       <RenderForm form={form} schema={listForm} />
     </div>
   );
