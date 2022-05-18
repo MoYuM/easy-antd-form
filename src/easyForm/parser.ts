@@ -1,11 +1,9 @@
 import {
   AST,
-  BaseSchema,
+  Schema,
   BaseItem,
   BaseFormItem,
   BaseFormList,
-  Props,
-  ASTtypes,
   Element,
 } from './interface';
 import { omit, error } from './utils';
@@ -18,7 +16,7 @@ import React from 'react';
  * @param schema 
  * @returns ast
  */
-function parser(schema: BaseSchema): AST {
+function parser(schema: Schema): AST {
 
   const ast: AST = {
     type: 'form',
@@ -88,7 +86,7 @@ function getComponent(name?: string) {
 function getFormItemChildren(item: BaseFormItem, type: string): AST['children'] {
   const haveChildren = Array.isArray(item.children) && item.children.length > 0;
   const props = transformProps(item.props);
-  let children: AST['children'] | AST['children'][number] = [];
+  let children: AST['children'];
 
   // 有children代表时稍复杂的item
   if (haveChildren && (type === 'formItem' || type === 'formItemWithDefaultElement')) {
@@ -99,27 +97,14 @@ function getFormItemChildren(item: BaseFormItem, type: string): AST['children'] 
   if (!haveChildren && type === 'formItem') {
     if (!item.component) {
       error(`component 不存在，请检查 schema`);
-      return children;
+      return [];
     }
 
     children = {
       type: 'reactElement',
       props,
-      component: getComponent(item.component) as Element,
+      component: getComponent(item.component as string) as Element,
     }
-  }
-
-  // 最基本的item，使用了内置组件
-  if (!haveChildren && type === 'formItemWithDefaultElement') {
-    if (!item.component) {
-      error(`component 不存在，请检查 schema`);
-      return children;
-    }
-    children.push({
-      type: 'defaultElement',
-      props,
-      component: item.component as string,
-    })
   }
 
   // 需要依赖的 formItem

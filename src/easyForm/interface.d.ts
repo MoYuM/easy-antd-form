@@ -1,32 +1,43 @@
 import { FormItemProps, FormProps } from 'antd';
-import { FormListProps } from 'antd/lib/form';
+import { FormInstance, FormListProps } from 'antd/lib/form';
+
+export type Element = React.ReactElement | React.FC | React.ComponentClass
 
 export type EasyFormProps = FormProps & {
-  schema: BaseSchema
+  schema: Schema
   plugins?: Array<Plugin>
 }
 
-export type BaseSchema = {
+export type Schema = {
   type?: 'form',
   items: Array<BaseItem>,
 }
 
-export type Element = React.ReactElement | React.FC | React.ComponentClass
-
 export type BaseItem = BaseFormItem | BaseFormList | BaseElement
 
+/**
+ * 普通的FormItem
+ * 
+ * component 可以为 string，也可以直接传React元素，即自定义组件
+ */
 export type BaseFormItem = FormItemProps & {
   type: 'item',
   children?: BaseItem[],
-  component?: string | Element, // TODO 用map
-  props?: any, // TODO 尽量别用any
+  component?: string | Element,
+  props?: any,
 }
 
+/**
+ * 渲染普通的React元素
+ */
 export type BaseElement = {
   type: 'reactElement',
   component: Element,
 }
 
+/**
+ * FormList
+ */
 export type BaseFormList = Omit<FormListProps, 'children'> & {
   type: 'list',
   fields: BaseItem[],
@@ -39,7 +50,7 @@ export type Props = {
   function?: Function,
 }
 
-export type ASTtypes =
+export type NodeType =
   'formItem'
   | 'formList'
   | 'formItemWrapper'
@@ -47,13 +58,38 @@ export type ASTtypes =
   | 'formListRemoveBtn'
   | 'formListAddBtn'
   | 'formListField'
-  | 'formItemWithDefaultElement' // 内置组件
-  | 'defaultElement'
+  | "formItemWithFuncProps"
 
 export type AST = {
   type: 'form',
   props?: Record<string, any>,
-  children: Array<DefaultElementAST | ReactElementAST | FormItemAST | FormListBtnAST | undefined>
+  children: Node | Node[],
+}
+
+export type Node = BaseNode | ReactElementNode | FunctionPropsNode
+
+export type BaseNode = {
+  type: Omit<NodeType, 'reactElement' | 'formItemWithFuncProps'>,
+  props: Record<string, any>,
+  children: Node | Node[],
+}
+
+export type ReactElementNode = {
+  type: 'reactElement',
+  props: Record<string, any>,
+  component: Element,
+}
+
+
+export type FunctionPropsNode = {
+  type: 'formItemWithFuncProps',
+  props: Record<string, any | ((form: FormInstance) => any)>,
+  children: Node | Node[],
+}
+
+
+type FormItemNode = {
+  type: ''
 }
 
 export type DefaultElementAST = {
@@ -86,5 +122,4 @@ export type Plugin = {
   }) => void,
 }
 
-export type Node = AST['children'][number] | AST
 export type Parent = AST['children'][number] | null

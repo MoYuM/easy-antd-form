@@ -1,254 +1,7 @@
-import { Form, Input, Select, Button, FormInstance, Space, } from "antd";
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { Form, FormInstance, } from "antd";
 import RenderForm from "./easyForm";
-import { EasyFormProps, Plugin, BaseSchema } from "./easyForm/interface";
-import Parser from "./easyForm/parser";
-import React from "react";
-import parser from "./easyForm/parser";
+import { Schema } from "./easyForm/interface";
 
-const formItemLayout = {
-  labelCol: {
-    xs: { span: 24 },
-    sm: { span: 4 },
-  },
-  wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 20 },
-  },
-};
-const formItemLayoutWithOutLabel = {
-  wrapperCol: {
-    xs: { span: 24, offset: 0 },
-    sm: { span: 20, offset: 4 },
-  },
-};
-
-const schema: BaseSchema = {
-  name: "form",
-  items: [
-    // 普通item
-    {
-      type: "item",
-      component: "input",
-      name: "name",
-      label: "姓名",
-      props: {
-        placeholder: "请输入姓名",
-      },
-    },
-
-    // 稍复杂的item
-    {
-      type: "item",
-      label: "年龄",
-      children: [
-        {
-          type: "item",
-          component: "input",
-          name: "age",
-          noStyle: true,
-        },
-        {
-          type: "reactElement",
-          component: <a>need help?</a>,
-        },
-      ],
-    },
-    // {
-    //   type: 'formItem',
-    //   props: [
-    //     { type: 'formItemProps', name: 'label', value: '年龄' }
-    //   ],
-    //   children: [
-    //     {
-    //       type: 'formItem',
-    //       props: [
-    //         { type: 'formItemProps', name: 'name', value: 'age' },
-    //         { type: 'formItemProps', name: 'noStyle', value: true },
-    //       ],
-    //       children: [
-    //         {
-    //           type: 'reactElement',
-    //           props: [
-    //             { type: 'reactElementProps', name: 'placeholder', value: '请输入年龄' }
-    //           ],
-    //           component: Input,
-    //         }
-    //       ]
-    //     },
-    //     {
-    //       type: 'reactElement',
-    //       component: <a>need help?</a>
-    //     }
-    //   ]
-    // },
-
-    // 有依赖的item
-    {
-      type: "item",
-      name: "deps",
-      label: "依赖",
-      dependencies: ["age"],
-      component: "input",
-      props: {
-        disabled: ({ getFieldValue }: FormInstance) =>
-          getFieldValue("age") === 10,
-      },
-    },
-
-    // form list
-    {
-      type: "list",
-      name: "list",
-      list: [
-        {
-          type: "item",
-          name: "first",
-          component: "input",
-        },
-        {
-          type: "item",
-          name: "last",
-          component: "input",
-        },
-      ],
-    },
-  ],
-};
-
-const ast = {
-  type: "form",
-  props: [{ type: "formProps", name: "name", value: "easy-antd-form" }],
-  children: [
-    // 普通item
-    {
-      type: "formItem",
-      props: [
-        { type: "formItemProps", name: "name", value: "name" },
-        { type: "formItemProps", name: "label", value: "姓名" },
-      ],
-      children: [
-        {
-          type: "reactElement",
-          props: [
-            {
-              type: "reactElementProps",
-              name: "placeholder",
-              value: "请输入姓名",
-            },
-          ],
-          component: Input,
-        },
-      ],
-    },
-
-    // 稍复杂的item
-    {
-      type: "formItem",
-      props: [{ type: "formItemProps", name: "label", value: "年龄" }],
-      children: [
-        {
-          type: "formItem",
-          props: [
-            { type: "formItemProps", name: "name", value: "age" },
-            { type: "formItemProps", name: "noStyle", value: true },
-          ],
-          children: [
-            {
-              type: "reactElement",
-              props: [
-                {
-                  type: "reactElementProps",
-                  name: "placeholder",
-                  value: "请输入年龄",
-                },
-              ],
-              component: Input,
-            },
-          ],
-        },
-        {
-          type: "reactElement",
-          component: <a>need help?</a>,
-        },
-      ],
-    },
-
-    // 有依赖的
-    {
-      type: "formItemWrapper",
-      props: [
-        { type: "formItemProps", name: "dependencies", value: ["age"] },
-        { type: "formItemProps", name: "noStyle", value: true },
-      ],
-      children: [
-        {
-          type: "formItem",
-          props: [
-            { type: "formItemProps", name: "name", value: "deps" },
-            { type: "formItemProps", name: "label", value: "依赖" },
-          ],
-          children: [
-            {
-              type: "reactElement",
-              component: Input,
-              props: [
-                {
-                  type: "propsWithFunction",
-                  name: "disabled",
-                  function: ({ getFieldValue }: FormInstance) =>
-                    getFieldValue("age") === 10,
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-
-    // list
-    {
-      type: "formList",
-      props: [{ type: "formListProps", name: "name", value: "list" }],
-      children: [
-        {
-          type: "formListField",
-          children: [
-            {
-              type: "formItem",
-              props: [{ type: "formItemProps", name: "name", value: "first" }],
-              children: [
-                {
-                  type: "reactElement",
-                  component: Input,
-                },
-              ],
-            },
-            {
-              type: "formItem",
-              props: [{ type: "formItemProps", name: "name", value: "last" }],
-              children: [
-                {
-                  type: "reactElement",
-                  component: Input,
-                },
-              ],
-            },
-          ],
-        },
-        {
-          type: "formItem",
-          children: [
-            {
-              type: "formListRemoveItemBtn",
-              component: <a>remove</a>,
-            },
-          ],
-        },
-      ],
-    },
-  ],
-};
 
 /**
  * Easy Antd Form
@@ -281,7 +34,7 @@ function App() {
   const [form] = Form.useForm();
 
   // 最简单的情况
-  const normal: BaseSchema = {
+  const normal: Schema = {
     type: "form",
     items: [
       {
@@ -310,7 +63,7 @@ function App() {
 
   // 需要插入额外组件的情况
   // （如果是form render的话，这里就要额外写一个自定义组件，我希望简化这个步骤）
-  const normalAndReactElement: BaseSchema = {
+  const normalAndReactElement: Schema = {
     type: "form",
     items: [
       {
@@ -333,7 +86,7 @@ function App() {
 
   // 有依赖的item
   // 通过传入函数的形式，实现 dependencies 和 shouldupdate 的功能
-  const haveDepsItem: BaseSchema = {
+  const haveDepsItem: Schema = {
     type: "form",
     items: [
       {
@@ -366,7 +119,7 @@ function App() {
   // list 是 easy-antd-form 的重点，会做很多的简化
   // 代价就是需要 easy-antd-form 帮开发者做一些决定
   // 解决办法就是留出自定义的接口
-  const listForm: BaseSchema = {
+  const listForm: Schema = {
     type: "form",
     items: [
       {
